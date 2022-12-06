@@ -31,7 +31,7 @@ class Pelota():
             self.vx *= -1 # para cambiar la direccion de la pelota                                       
             self.vy *= -1 # ponemos vy para que la pelota salga hacia    
                           # el mismo lado de donde llego                 # Para que la pelota desaparezca mas alla de los limites de x
-                                                                         # y vuelva a aparecer rebotando hacia el lado contrario
+            return "right"                                               # y vuelva a aparecer rebotando hacia el lado contrario
         if self.pos_x < 0 - self.radio * 10: #Limite izquierdo           # desde donde vino                                   
             self.contadorDerecha += 1  # Contador de marcador
             
@@ -43,6 +43,7 @@ class Pelota():
             self.vx *= -1 # para cambiar la direccion de la pelota                   
             self.vy *= -1 # ponemos vy para que la pelota salga hacia                                                                                    
                           # el mismo lado de donde llego        
+            return "left"
         
     def marcador(self,pantalla_principal):
           
@@ -75,15 +76,32 @@ class Pelota():
     def abajo(self):
         return self.pos_y + self.radio
      
-    def comprobar_choque(self,*raquetas):#Para tener varios parametros ponemos el * antes, signifaca que tendriamos r1 y r2
+    def comprobar_choque(self,r1,r2):#Para tener varios parametros ponemos el * antes, signifaca que tendriamos r1 y r2
         #Logica de chaque pelota raqueta derecha
-        for r in raquetas:
-            if self.derecha >= r.izquierda and \
-                self.izquierda <= r.derecha and \
-                self.abajo >= r.arriba and \
+        
+        if self.derecha >= r2.izquierda and \
+            self.izquierda <= r2.derecha and \
+            self.abajo >= r2.arriba and \
+            self.arriba <= r2.abajo:
+                self.vx *= -1
+               
+        if self.derecha  >= r1.izquierda and \
+            self.izquierda  <= r1.derecha and \
+            self.abajo >= r1.arriba and\
+            self.arriba <= r1.abajo:
+            self.vx *= -1
+            
+    def comprobar_choqueV2(self,*raquetas):#Para tener varios parametros ponemos el * antes, signifaca que tendriamos r1 y r2
+                                           #Logica de chaque pelota raqueta derecha
+         for r in raquetas:
+             if self.derecha  >= r.izquierda and \
+                self.izquierda  <= r.derecha and \
+                self.abajo >= r.arriba and\
                 self.arriba <= r.abajo:
-                    self.vx *= -1
-                    return #para finalizar el bucle, podriamos utilizar un break
+                     self.vx *= -1
+                     break    
+            
+            
 class Raqueta():
     def __init__(self,pos_x, pos_y, w = 20, h= 100, color=(255,255,255),vx=1,vy=1):
         self.pos_x = pos_x
