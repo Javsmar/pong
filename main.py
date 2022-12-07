@@ -1,5 +1,13 @@
-from pantallas import Partida
+from pantallas import Partida,Menu
 import pygame as pg
 
-juego = Partida()
-juego.bucle_forograma()
+
+
+
+
+menu = Menu()
+mensaje = menu.bucle_pantalla()
+
+if mensaje == "jugar":
+    juego = Partida()
+    juego.bucle_forograma()
