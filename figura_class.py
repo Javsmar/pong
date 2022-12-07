@@ -8,8 +8,7 @@ class Pelota():
         self.color = color
         self.vx = vx
         self.vy = vy
-        self.contadorDerecha = 0
-        self.contadorIzquierda = 0
+       
         self.font = pg.font.Font(None, 40)
         
     def mover(self,y_max = 600, x_max = 800):
@@ -22,7 +21,6 @@ class Pelota():
             self.vy *= -1                                                     # de arriba a abajo
         
         if self.pos_x >= x_max + self.radio * 10: # limite derecha                
-            self.contadorIzquierda += 1 # Contador de marcador
             
             self.pos_x = x_max // 2
                                     #Para que la pelota salga del centro de la pantalla
@@ -33,32 +31,15 @@ class Pelota():
                           # el mismo lado de donde llego                 # Para que la pelota desaparezca mas alla de los limites de x
             return "right"                                               # y vuelva a aparecer rebotando hacia el lado contrario
         if self.pos_x < 0 - self.radio * 10: #Limite izquierdo           # desde donde vino                                   
-            self.contadorDerecha += 1  # Contador de marcador
-            
+          
             self.pos_x = x_max // 2 #
                                     #Para que la pelota salga del centro de la pantalla
             self.pos_y = y_max // 2 #   
-            
-            
+    
             self.vx *= -1 # para cambiar la direccion de la pelota                   
             self.vy *= -1 # ponemos vy para que la pelota salga hacia                                                                                    
                           # el mismo lado de donde llego        
             return "left"
-        
-    def marcador(self,pantalla_principal):
-          
-        marcadorIzquierdo = self.font.render(str(self.contadorDerecha), 0, (202, 111, 30))#Suma de puntos
-        marcadorDerecha = self.font.render(str(self.contadorIzquierda), 0, (202, 111, 30))#Suma de puntos 
-        
-        player1 = self.font.render("PLAYER 1  ", 0, (202, 111, 30)) # creamos un varible para que aparesca en la pantalla (JUGADOR 1 0 2)
-        player2 = self.font.render("PLAYER 2  ", 0, (202, 111, 30))
-        
-        pantalla_principal.blit(player1,(110,10)) #Ubicacion del marcador en la pantalla
-        pantalla_principal.blit(player2,(515,10)) #Ubicacion del marcador en la pantalla
-        
-         
-        pantalla_principal.blit(marcadorDerecha,(170,40))   #Ubicacion del marcador en la pantalla
-        pantalla_principal.blit(marcadorIzquierdo,(575,40)) #Ubicacion del marcador en la pantalla
                                                    
     def dibujar(self, pantalla):
         pg.draw.circle(pantalla,self.color,(self.pos_x,self.pos_y),self.radio)#Dibujar la pelota
