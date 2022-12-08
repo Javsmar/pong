@@ -11,8 +11,8 @@ VERDE = (8,130,28)
 ROJO = (169,50,38)
 PINK = (255,0,204)
 FPS = 280
-primer_aviso = 10000
-segundo_aviso = 5000
+primer_aviso = 7000
+segundo_aviso = 4000
 
 
 class Partida:
@@ -30,7 +30,7 @@ class Partida:
         self.marcador1 = 0
         self.marcador2 = 0
         self.quienMarco = ""
-        self.temporizador = 15000 # en  milisegundos
+        self.temporizador = 10000 # en  milisegundos
         self.colorFondo = VERDE
         self.contadorFotograma = 0
         
@@ -78,7 +78,7 @@ class Partida:
 
             pg.display.flip()
             
-        return "El resultado Jugador1: " +str( self.marcador2) + " jugador2: " + str(self.marcador1)
+        return self.resultado_final()
     
         pg.quit() 
         
@@ -158,14 +158,17 @@ class Menu:
                 if evento.type == pg.QUIT:
                     game_over = True
 
-            if evento.type == pg.KEYDOWN:
-                if evento.key == pg.K_RETURN:
-                    game_over = True
-                    return "jugar"          
-
+                if evento.type == pg.KEYDOWN:
+                    if evento.key == pg.K_RETURN:
+                        game_over = True
+                    elif evento.key == pg.K_r:
+                        game_over = True
+           
             self.pantalla_principal.blit(self.imagenFondo,(0,0))
-            menu = self.fuenteMenu.render("Pulsa ENTER para jugar",0,PINK)
-            self.pantalla_principal.blit(menu, (10,ALTO//2) )
+            jugar = self.fuenteMenu.render("Pulsa ENTER para jugar",0,PINK)
+            record = self.fuenteMenu.render("Pulsa R para ver records",0,PINK)
+            self.pantalla_principal.blit(jugar, (10,ALTO//2) )
+            self.pantalla_principal.blit(record, (10,ALTO//1.8) )
             pg.display.flip()
             
 class Resultado:
@@ -176,7 +179,7 @@ class Resultado:
         self.tasa_refresco = pg.time.Clock()
 
         #self.imagenFondo = pg.image.load("image/portada.jpg")
-        self.fuenteResultado = pg.font.Font("fonts/pressStart2P.ttf", 20)
+        self.fuenteResultado = pg.font.Font("fonts/pressStart2P.ttf", 15)
         self.resultado = resultado
 
     def bucle_pantalla(self):
@@ -197,4 +200,32 @@ class Resultado:
             self.pantalla_principal.blit(result, (10,ALTO//2) )
             pg.display.flip()
             
+class Records:
+    def __init__(self):
+        pg.init()
+        self.pantalla_principal = pg.display.set_mode( (ANCHO,ALTO) )
+        pg.display.set_caption("Records")
+        self.tasa_refresco = pg.time.Clock()
 
+        #self.imagenFondo = pg.image.load("image/portada.jpg")
+        self.fuenteResultado = pg.font.Font("fonts/pressStart2P.ttf", 15)
+      
+
+    def bucle_pantalla(self):
+        game_over = False
+
+        while not game_over:
+            for evento in pg.event.get():
+                if evento.type == pg.QUIT:
+                    game_over = True
+
+            if evento.type == pg.KEYDOWN:
+                if evento.key == pg.K_RETURN:
+                    game_over = True
+                             
+
+            self.pantalla_principal.fill(BLANCO)
+            result = self.fuenteResultado.render("RECORDS",0,PINK)
+            self.pantalla_principal.blit(result, (10,ALTO//2) )
+            pg.display.flip()
+            

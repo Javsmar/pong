@@ -1,18 +1,8 @@
-from pantallas import Partida, Menu, Resultado
+from pantallas import Partida, Menu, Resultado,Records
 import pygame as pg
 
-
-juego = Partida()
-valor_resultado = juego.bucle_fotograma()
-print("El resultado final: ",valor_resultado)
-resultado = Resultado(valor_resultado)
-resultado.bucle_pantalla()
-
-"""
 menu = Menu()
-mensaje = menu.bucle_pantalla()
+menu.bucle_pantalla()
 
-if mensaje == "jugar":
-    juego = Partida()
-    juego.bucle_forograma()
-"""
+records = Records()
+records.bucle_pantalla()
