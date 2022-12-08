@@ -1,4 +1,5 @@
 import pygame as pg
+from utils import *
 
 class Pelota():
     def __init__(self,pos_x,pos_y,radio=10,color=(231,23,238),vx=0.5,vy=0.5):
