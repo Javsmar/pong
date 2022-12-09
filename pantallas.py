@@ -20,23 +20,24 @@ class Partida:
         self.temporizador = TIEMPO_LIMITE # en  milisegundos
         self.colorFondo = VERDE
         self.contadorFotograma = 0
+        self.sonido = pg.mixer.Sound("songs/pelota.mp3")
         
     def bucle_fotograma(self):
+        self.temporizador = TIEMPO_LIMITE
+        self.marcador1 = 0 #Reinicio de tiempo, marcadores y tas refresco en el bucle para empezar de nuevo
+        self.marcador2 = 0
+        self.tasa_refresco.tick()
         game_over = False
         
         while not game_over and (self.marcador1 < 5 or self.marcador2 < 5 ) and self.temporizador > 0:
             
-            
             salto_tiempo = self.tasa_refresco.tick(FPS)
-            
             self.temporizador -= salto_tiempo
-            
-            if self.temporizador == 0:
-                game_over = True
             
             for eventos in pg.event.get():
                 if eventos.type == pg.QUIT:
-                    game_over = True
+                    #game_over = True
+                    return True
                     
             self.raqueta1.mover(pg.K_w,pg.K_s)      
             self.raqueta2.mover(pg.K_UP,pg.K_DOWN)
@@ -47,6 +48,8 @@ class Partida:
             self.pantalla_principal.fill(self.fijar_fondo())
             
             self.pelota.comprobar_choqueV2(self.raqueta1,self.raqueta2)
+            self.sonido.play()
+            self.sonido.stop()
             
             self.marcador()
             self.line_disc()
@@ -99,6 +102,7 @@ class Partida:
         self.contadorFotograma += 1#creamos un contador  para que itere y pueda parpadear
         
         if self.temporizador > primer_aviso:# no entra en ninguna condición
+            self.colorFondo = VERDE
             self.contadorFotograma = 0
             
         elif self.temporizador > segundo_aviso:#entra en la condición que parpadee en 10 seg
@@ -121,11 +125,11 @@ class Partida:
     
     def resultado_final(self):
         if self.marcador1 > self.marcador2:
-            return f"Gana el Jugador 2, resultado Jugador1: {self.marcador2} Jugador2: {self.marcador1}"
+            return f"Gana el Player2, resultado Player1: {self.marcador2} Player2: {self.marcador1}"
         elif self.marcador2 > self.marcador1:
-            return f"Gana el Jugador 1, resultado Jugador1: {self.marcador2} Jugador2: {self.marcador1}"
+            return f"Gana el Player1, resultado Player1: {self.marcador2} Player2: {self.marcador1}"
         else:      
-            return f"Empate, resultado Jugador1: {self.marcador2} Jugador2: {self.marcador1}"
+            return f"Empate, resultado Player1: {self.marcador2} Player2: {self.marcador1}"
     
 class Menu:
     def __init__(self):
@@ -136,15 +140,20 @@ class Menu:
 
         self.imagenFondo = pg.image.load("image/portada.jpg")
         self.fuenteMenu = pg.font.Font("fonts/pressStart2P.ttf", 20)
+        
+        self.musica = pg.mixer.Sound("songs/inicio.mp3")
 
     def bucle_pantalla(self):
+        
+        self.musica.play()
+       
         game_over = False
 
         while not game_over:
             for evento in pg.event.get():
                 if evento.type == pg.QUIT:
-                    game_over = True
-
+                    #game_over = True
+                    return True
                 if evento.type == pg.KEYDOWN:
                     if evento.key == pg.K_RETURN:
                         game_over = True
@@ -156,7 +165,9 @@ class Menu:
             record = self.fuenteMenu.render("Pulsa R para ver records",0,PINK)
             self.pantalla_principal.blit(jugar, (10,ALTO//2) )
             self.pantalla_principal.blit(record, (10,ALTO//1.8) )
+            
             pg.display.flip()
+        self.musica.stop()    
             
 class Resultado:
     def __init__(self):
@@ -175,12 +186,12 @@ class Resultado:
         while not game_over:
             for evento in pg.event.get():
                 if evento.type == pg.QUIT:
-                    game_over = True
+                    return True
 
                 if evento.type == pg.KEYDOWN:
                     if evento.key == pg.K_RETURN:
                         game_over = True
-                        return "jugar"          
+                                 
 
             self.pantalla_principal.fill(BLANCO)
             result = self.fuenteResultado.render(self.resultado,0,PINK)
@@ -207,7 +218,7 @@ class Records:
         while not game_over:
             for evento in pg.event.get():
                 if evento.type == pg.QUIT:
-                    game_over = True
+                    return True
 
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_RETURN:
